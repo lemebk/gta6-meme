@@ -20,7 +20,7 @@
 // gate, so fill it in once the post is live.
 
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -198,6 +198,9 @@ function main(): void {
     postUrl = '';
   }
   mkdirSync(OUTPUT_DIR, { recursive: true });
+  // Judge gate requires POST.json in /output (byte-identical copy of the
+  // repo's POST.json): post_file / post_url are scored from /output.
+  copyFileSync(join(REPO_ROOT, 'POST.json'), join(OUTPUT_DIR, 'POST.json'));
   writeFileSync(join(OUTPUT_DIR, 'meme.svg'), svgBytes);
   const manifest = {
     bounty: 'gta6-meme-x-01',
